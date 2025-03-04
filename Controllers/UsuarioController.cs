@@ -6,10 +6,10 @@ namespace BibliotecaAPI.Controllers;
 [Route("api/[controller]")]
 [ApiController]
 
-public class UsuarioControllers : ControllerBase
+public class UsuarioController : ControllerBase
 {
     private readonly ApplicationDBContext _context;
-    public UsuarioControllers(ApplicationDBContext context)
+    public UsuarioController(ApplicationDBContext context)
     {
         this._context = context;
     }
