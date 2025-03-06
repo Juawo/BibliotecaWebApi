@@ -1,4 +1,5 @@
 using BibliotecaAPI.Data;
+using BibliotecaAPI.Mappers.LivroMappers;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BibliotecaAPI.Controllers;
@@ -17,7 +18,8 @@ public class LivroController : ControllerBase // LivroController herda de Contro
     [HttpGet] // Método para retornar todos os livros
     public IActionResult ListarTodosLivros()
     {
-        var livros = _context.livros.ToList(); // Busca todos os livros no banco de dados
+        var livros = _context.livros.ToList().Select(livro => livro.ToLivroDto());
+        // Busca todos os livros no banco de dados e transforma cada um dos objetos em DTOs de livro
         // OBS : Estudar execução adiada 
         return Ok(livros); // Retorna os livros
     }
@@ -32,6 +34,6 @@ public class LivroController : ControllerBase // LivroController herda de Contro
             return NotFound();
         }
 
-        return Ok(livro);
+        return Ok(livro.ToLivroDto());
     }
 }
