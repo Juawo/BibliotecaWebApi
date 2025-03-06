@@ -1,4 +1,5 @@
 using BibliotecaAPI.Data;
+using BibliotecaAPI.Mappers.EmprestimoMappers;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BibliotecaAPI.Controllers;
@@ -17,7 +18,7 @@ public class EmprestimoController : ControllerBase
     [HttpGet]
     public IActionResult ListarTodosEmprestimos()
     {
-        var emprestimos = _context.emprestimos.ToList();
+        var emprestimos = _context.emprestimos.ToList().Select(emprestimo => emprestimo.ToEmprestimoDto());
         return Ok(emprestimos);
     }
 
@@ -30,6 +31,6 @@ public class EmprestimoController : ControllerBase
             return NotFound();
         }
 
-        return Ok(emprestimo);
+        return Ok(emprestimo.ToEmprestimoDto());
     }
 }

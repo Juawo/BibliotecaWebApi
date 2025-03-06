@@ -1,4 +1,5 @@
 using BibliotecaAPI.Data;
+using BibliotecaAPI.Mappers.UsuarioMappers;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BibliotecaAPI.Controllers;
@@ -17,7 +18,7 @@ public class UsuarioController : ControllerBase
     [HttpGet]
     public IActionResult ListarTodosUsuarios()
     {
-        var usuarios = _context.usuarios.ToList();
+        var usuarios = _context.usuarios.ToList().Select(usuario => usuario.ToUsuarioDto());
         return Ok(usuarios);
     }
 
@@ -31,6 +32,6 @@ public class UsuarioController : ControllerBase
             return NotFound();
         }
 
-        return Ok(usuario);
+        return Ok(usuario.ToUsuarioDto());
     }
 }
