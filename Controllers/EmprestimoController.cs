@@ -9,24 +9,24 @@ namespace BibliotecaAPI.Controllers;
 [ApiController]
 public class EmprestimoController : ControllerBase
 {
-    private readonly EmprestimoRepository _emprestimoContext;
+    private readonly EmprestimoRepository _emprestimoRepository;
 
-    public EmprestimoController(EmprestimoRepository emprestimoContext)
+    public EmprestimoController(EmprestimoRepository emprestimoRepository)
     {
-        this._emprestimoContext = emprestimoContext;
+        this._emprestimoRepository = emprestimoRepository;
     }
 
     [HttpGet]
     public IActionResult ListarTodosEmprestimos()
     {
-        var emprestimos = _emprestimoContext.ListarTodosLivros().Select(emprestimo => emprestimo.ToEmprestimoDto());
+        var emprestimos = _emprestimoRepository.ListarTodosEmprestimos().Select(emprestimo => emprestimo.ToEmprestimoDto());
         return Ok(emprestimos);
     }
 
     [HttpGet("{id}")]
     public IActionResult BuscarEmprestimoId([FromRoute] int id)
     {
-        var emprestimo = _emprestimoContext.PesquisarLivroPorId(id);
+        var emprestimo = _emprestimoRepository.PesquisarEmprestimoPorId(id);
         if (emprestimo == null)
         {
             return NotFound();

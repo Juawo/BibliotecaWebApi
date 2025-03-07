@@ -28,4 +28,25 @@ public class UsuarioRepository
 
         return usuario;
     }
+
+    public void CadastrarUsuario(Usuario usuario)
+    {
+        _context.Add(usuario);
+        _context.SaveChanges();
+
+    }
+
+    public void AtualizarUsuario(Usuario usuario)
+    {
+        _context.Update(usuario);
+        _context.SaveChanges();
+
+    }
+
+    public void RemoverUsuario(Usuario usuario)
+    {
+        _context.Remove(usuario);
+        _context.SaveChanges();
+
+    }
 }

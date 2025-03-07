@@ -29,4 +29,25 @@ public class LivroRepository
 
         return livro;
     }
+
+    public void CadastrarLivro(Livro livro)
+    {
+        _context.Add(livro);
+        _context.SaveChanges();
+        
+    }
+
+    public void AtualizarLivro(Livro livro)
+    {
+        _context.Update(livro);
+        _context.SaveChanges();
+
+    }
+
+    public void RemoverLivro(Livro livro)
+    {
+        _context.Remove(livro);
+        _context.SaveChanges();
+
+    }
 }

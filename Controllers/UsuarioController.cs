@@ -10,23 +10,23 @@ namespace BibliotecaAPI.Controllers;
 
 public class UsuarioController : ControllerBase
 {
-    private readonly UsuarioRepository _usuarioContext;
-    public UsuarioController(UsuarioRepository usuarioContext)
+    private readonly UsuarioRepository _usuarioRepository;
+    public UsuarioController(UsuarioRepository usuarioRepository)
     {
-        this._usuarioContext = usuarioContext;
+        this._usuarioRepository = usuarioRepository;
     }
 
     [HttpGet]
     public IActionResult ListarTodosUsuarios()
     {
-        var usuarios = _usuarioContext.ListarTodosLivros().Select(usuario => usuario.ToUsuarioDto());
+        var usuarios = _usuarioRepository.ListarTodosLivros().Select(usuario => usuario.ToUsuarioDto());
         return Ok(usuarios);
     }
 
     [HttpGet("{id}")]
     public IActionResult BuscarUsuarioId([FromRoute] int id)
     {
-        var usuario = _usuarioContext.PesquisarLivroPorId(id);
+        var usuario = _usuarioRepository.PesquisarLivroPorId(id);
 
         if (usuario == null)
         {
