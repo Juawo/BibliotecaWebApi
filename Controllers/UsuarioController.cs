@@ -1,5 +1,6 @@
 using BibliotecaAPI.Data;
 using BibliotecaAPI.Mappers.UsuarioMappers;
+using BibliotecaAPI.Repositories;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BibliotecaAPI.Controllers;
@@ -9,23 +10,23 @@ namespace BibliotecaAPI.Controllers;
 
 public class UsuarioController : ControllerBase
 {
-    private readonly ApplicationDBContext _context;
-    public UsuarioController(ApplicationDBContext context)
+    private readonly UsuarioRepository _usuarioContext;
+    public UsuarioController(UsuarioRepository usuarioContext)
     {
-        this._context = context;
+        this._usuarioContext = usuarioContext;
     }
 
     [HttpGet]
     public IActionResult ListarTodosUsuarios()
     {
-        var usuarios = _context.usuarios.ToList().Select(usuario => usuario.ToUsuarioDto());
+        var usuarios = _usuarioContext.ListarTodosLivros().Select(usuario => usuario.ToUsuarioDto());
         return Ok(usuarios);
     }
 
     [HttpGet("{id}")]
     public IActionResult BuscarUsuarioId([FromRoute] int id)
     {
-        var usuario = _context.usuarios.Find();
+        var usuario = _usuarioContext.PesquisarLivroPorId(id);
 
         if (usuario == null)
         {

@@ -1,5 +1,6 @@
 using BibliotecaAPI.Data;
 using BibliotecaAPI.Mappers.EmprestimoMappers;
+using BibliotecaAPI.Repositories;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BibliotecaAPI.Controllers;
@@ -8,24 +9,24 @@ namespace BibliotecaAPI.Controllers;
 [ApiController]
 public class EmprestimoController : ControllerBase
 {
-    private readonly ApplicationDBContext _context;
+    private readonly EmprestimoRepository _emprestimoContext;
 
-    public EmprestimoController(ApplicationDBContext context)
+    public EmprestimoController(EmprestimoRepository emprestimoContext)
     {
-        this._context = context;
+        this._emprestimoContext = emprestimoContext;
     }
 
     [HttpGet]
     public IActionResult ListarTodosEmprestimos()
     {
-        var emprestimos = _context.emprestimos.ToList().Select(emprestimo => emprestimo.ToEmprestimoDto());
+        var emprestimos = _emprestimoContext.ListarTodosLivros().Select(emprestimo => emprestimo.ToEmprestimoDto());
         return Ok(emprestimos);
     }
 
     [HttpGet("{id}")]
     public IActionResult BuscarEmprestimoId([FromRoute] int id)
     {
-        var emprestimo = _context.emprestimos.Find(id);
+        var emprestimo = _emprestimoContext.PesquisarLivroPorId(id);
         if (emprestimo == null)
         {
             return NotFound();
