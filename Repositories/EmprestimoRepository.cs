@@ -23,7 +23,7 @@ public class EmprestimoRepository
         return emprestimos;
     }
 
-    public Emprestimo? PesquisarEmprestimoPorId(int id)
+    public Emprestimo? BuscarEmprestimoPorId(int id)
     {
         var emprestimo = _context.emprestimos.Find(id);
 
@@ -35,9 +35,9 @@ public class EmprestimoRepository
         return emprestimo;
     }
 
-    public Emprestimo? PesquisarEmprestimoPorLivroEUsuario(Livro livro, Usuario usuario)
+    public Emprestimo? BuscarEmprestimoPorLivroEUsuario(int idLivro, int idUsuario)
     {
-        var emprestimo = _context.emprestimos.FirstOrDefault(e => e.livro.Id == livro.Id && e.usuario.Id == usuario.Id && e.isDevolvido == false);
+        var emprestimo = _context.emprestimos.FirstOrDefault(e => e.livro.Id == idLivro && e.usuario.Id == idUsuario && e.isDevolvido == false);
 
         if (emprestimo == null)
         {
@@ -47,7 +47,7 @@ public class EmprestimoRepository
         return emprestimo;
     }
 
-    public void CadastrarEmprestimo(Emprestimo emprestimo)
+    public void RealizarEmprestimo(Emprestimo emprestimo)
     {
         _context.Add(emprestimo);
         _context.SaveChanges();

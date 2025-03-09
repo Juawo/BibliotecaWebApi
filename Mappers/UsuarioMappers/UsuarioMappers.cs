@@ -14,4 +14,14 @@ public static class UsuarioMappers
             email = usuarioModel.email
         };
     }
+    public static Usuario ToUsuarioModel(this UsuarioDto usuarioDto)
+    {
+        return new Usuario
+        {
+            Id = usuarioDto.Id,
+            nome = usuarioDto.nome,
+            cpf = usuarioDto.cpf,
+            email = usuarioDto.email
+        };
+    }
 }

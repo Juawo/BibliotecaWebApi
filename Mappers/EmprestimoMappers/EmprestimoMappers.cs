@@ -16,4 +16,14 @@ public static class EmprestimoMappers
             isDevolvido = empresitmoModel.isDevolvido
         };
     }
+
+    // public static Emprestimo ToEmprestimoModel(this EmprestimoDto emprestimoDto)
+    // {
+    //     return new Emprestimo
+    //     {
+    //         Id = emprestimoDto.Id,
+    //         usuario = 
+
+    //     }
+    // }
 }

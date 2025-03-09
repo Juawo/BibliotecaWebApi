@@ -1,6 +1,9 @@
 using BibliotecaAPI.Data;
+using BibliotecaAPI.Dtos.Emprestimo;
+using BibliotecaAPI.Dtos.Livro;
 using BibliotecaAPI.Mappers.LivroMappers;
 using BibliotecaAPI.Repositories;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BibliotecaAPI.Controllers;
@@ -36,5 +39,15 @@ public class LivroController : ControllerBase // LivroController herda de Contro
         }
 
         return Ok(livro.ToLivroDto());
+    }
+
+    [HttpPost]
+    public IActionResult RegistrarLivro([FromBody] CreateLivroRequestDto livroDto)
+    {
+        var livroModel = livroDto.ToLivroFromCreateDto();
+        _livroRepository.CadastrarLivro(livroModel);
+
+        return CreatedAtAction(nameof(BuscarLivroId), new {id = livroModel.Id}, livroModel.ToLivroDto());
+
     }
 }

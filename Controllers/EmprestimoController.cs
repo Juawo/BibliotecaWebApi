@@ -1,4 +1,5 @@
 using BibliotecaAPI.Data;
+using BibliotecaAPI.Dtos.Emprestimo;
 using BibliotecaAPI.Mappers.EmprestimoMappers;
 using BibliotecaAPI.Repositories;
 using Microsoft.AspNetCore.Mvc;
@@ -26,7 +27,7 @@ public class EmprestimoController : ControllerBase
     [HttpGet("{id}")]
     public IActionResult BuscarEmprestimoId([FromRoute] int id)
     {
-        var emprestimo = _emprestimoRepository.PesquisarEmprestimoPorId(id);
+        var emprestimo = _emprestimoRepository.BuscarEmprestimoPorId(id);
         if (emprestimo == null)
         {
             return NotFound();
@@ -34,4 +35,10 @@ public class EmprestimoController : ControllerBase
 
         return Ok(emprestimo.ToEmprestimoDto());
     }
+
+    // [HttpPost]
+    // public IActionResult RegistrarEmprestimo([FromBody] EmprestimoDto emprestimoDto)
+    // {
+
+    // }
 }

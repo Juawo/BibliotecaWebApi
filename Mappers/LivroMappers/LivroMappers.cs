@@ -16,4 +16,14 @@ public static class LivroMappers
             isEmprestado = livroModel.isEmprestado
         };
     }
+    public static Livro ToLivroFromCreateDto(this CreateLivroRequestDto livroDto)
+    {
+        return new Livro
+        {
+            titulo = livroDto.titulo,
+            autor = livroDto.autor,
+            editora = livroDto.editora,
+            anoPublicacao = livroDto.anoPublicacao
+        };
+    }
 }
