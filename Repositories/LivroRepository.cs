@@ -1,9 +1,10 @@
 using BibliotecaAPI.Data;
+using BibliotecaAPI.Interfaces.Repositories;
 using BibliotecaAPI.Models;
-using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace BibliotecaAPI.Repositories;
-public class LivroRepository
+public class LivroRepository : ILivroRepository
 {
     private readonly ApplicationDBContext _context;
 
@@ -12,15 +13,15 @@ public class LivroRepository
         this._context = context;
     }
 
-    public List<Livro> ListarTodosLivros()
+    public async Task<IEnumerable<Livro>> GetAllLivros()
     {
-        var livros = _context.livros.ToList();
+        var livros = await _context.livros.ToListAsync();
         return livros;
     }
 
-    public Livro? PesquisarLivroPorId(int id)
+    public async Task<Livro?> GetLivroById(int id)
     {
-        var livro = _context.livros.Find(id);
+        var livro = await _context.livros.FindAsync(id);
 
         if (livro == null)
         {
@@ -30,24 +31,27 @@ public class LivroRepository
         return livro;
     }
 
-    public void CadastrarLivro(Livro livro)
+    public async Task CreateLivro(Livro livro)
     {
-        _context.Add(livro);
-        _context.SaveChanges();
-        
+        await _context.AddAsync(livro);
+        await _context.SaveChangesAsync();
+
     }
 
-    public void AtualizarLivro(Livro livro)
+    public async Task UpdateLivro(Livro livro)
     {
         _context.Update(livro);
-        _context.SaveChanges();
+        await _context.SaveChangesAsync();
 
     }
 
-    public void RemoverLivro(Livro livro)
+    public async Task DeleteLivro(int idLivro)
     {
-        _context.Remove(livro);
-        _context.SaveChanges();
-
+        var livro = await _context.livros.FindAsync(idLivro);
+        if (livro != null)
+        {
+            _context.Remove(livro);
+            await _context.SaveChangesAsync();
+        }
     }
 }

@@ -20,18 +20,18 @@ public class LivroController : ControllerBase // LivroController herda de Contro
     }
 
     [HttpGet] // Método para retornar todos os livros
-    public IActionResult ListarTodosLivros()
+    public async Task<IActionResult> ListarTodosLivros()
     {
-        var livros = _livroRepository.ListarTodosLivros().Select(livro => livro.ToLivroDto());
+        var livros = (await _livroRepository.GetAllLivros()).Select(livro => livro.ToLivroDto());
         // Busca todos os livros no banco de dados e transforma cada um dos objetos em DTOs de livro
         // OBS : Estudar execução adiada 
         return Ok(livros); // Retorna os livros
     }
 
     [HttpGet("{id}")] // Método para retornar um livro específico
-    public IActionResult BuscarLivroId([FromRoute] int id)
+    public async Task<IActionResult> BuscarLivroId([FromRoute] int id)
     {
-        var livro = _livroRepository.PesquisarLivroPorId(id);
+        var livro = await _livroRepository.GetLivroById(id);
 
         if (livro == null)
         {
@@ -42,10 +42,10 @@ public class LivroController : ControllerBase // LivroController herda de Contro
     }
 
     [HttpPost]
-    public IActionResult RegistrarLivro([FromBody] CreateLivroRequestDto livroDto)
+    public async Task<IActionResult> RegistrarLivro([FromBody] CreateLivroRequestDto livroDto)
     {
         var livroModel = livroDto.ToLivroFromCreateDto();
-        _livroRepository.CadastrarLivro(livroModel);
+        await _livroRepository.CreateLivro(livroModel);
 
         return CreatedAtAction(nameof(BuscarLivroId), new {id = livroModel.Id}, livroModel.ToLivroDto());
 

@@ -1,8 +1,10 @@
 using BibliotecaAPI.Data;
+using BibliotecaAPI.Interfaces.Repositories;
 using BibliotecaAPI.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace BibliotecaAPI.Repositories;
-public class EmprestimoRepository
+public class EmprestimoRepository : IEmprestimoRepository
 {
     private readonly ApplicationDBContext _context;
 
@@ -11,21 +13,15 @@ public class EmprestimoRepository
         this._context = context;
     }
 
-    public List<Emprestimo> ListarTodosEmprestimos()
+    public async Task<IEnumerable<Emprestimo>> GetAllEmprestimos()
     {
-        var emprestimos = _context.emprestimos.ToList();
+        var emprestimos = await _context.emprestimos.ToListAsync();
         return emprestimos;
     }
 
-    public List<Emprestimo>? ListarHistoricoEmprestimosUsuario(Usuario usuario)
+    public async Task<Emprestimo?> GetEmprestimoById(int idEmprestimo)
     {
-        var emprestimos = _context.emprestimos.Where(e => e.usuario.Id == usuario.Id).ToList();
-        return emprestimos;
-    }
-
-    public Emprestimo? BuscarEmprestimoPorId(int id)
-    {
-        var emprestimo = _context.emprestimos.Find(id);
+        var emprestimo = await _context.emprestimos.FindAsync(idEmprestimo);
 
         if (emprestimo == null)
         {
@@ -35,9 +31,9 @@ public class EmprestimoRepository
         return emprestimo;
     }
 
-    public Emprestimo? BuscarEmprestimoPorLivroEUsuario(int idLivro, int idUsuario)
+    public async Task<Emprestimo?> GetEmprestimoByUsuarioAndLivro(int idLivro, int idUsuario)
     {
-        var emprestimo = _context.emprestimos.FirstOrDefault(e => e.livro.Id == idLivro && e.usuario.Id == idUsuario && e.isDevolvido == false);
+        var emprestimo = await _context.emprestimos.FirstOrDefaultAsync(e => e.livro.Id == idLivro && e.usuario.Id == idUsuario && e.isDevolvido == false);
 
         if (emprestimo == null)
         {
@@ -47,28 +43,34 @@ public class EmprestimoRepository
         return emprestimo;
     }
 
-    public void RealizarEmprestimo(Emprestimo emprestimo)
+    public async Task<IEnumerable<Emprestimo>> GetHistoricoEmprestimoUsuario(Usuario usuario)
     {
-        _context.Add(emprestimo);
-        _context.SaveChanges();
+        var emprestimos = await _context.emprestimos.Where(e => e.usuario.Id == usuario.Id).ToListAsync();
+        return emprestimos;
     }
 
-    public void AtualizarEmprestimo(Emprestimo emprestimo)
+    public async Task CreateEmprestimo(Emprestimo emprestimo)
+    {
+        await _context.AddAsync(emprestimo);
+        await _context.SaveChangesAsync();
+    }
+
+    public async Task UpdateEmprestimo(Emprestimo emprestimo)
     {
         _context.Update(emprestimo);
-        _context.SaveChanges();
+        await _context.SaveChangesAsync();
     }
 
-    public void RemoverEmprestimo(Emprestimo emprestimo)
+    public async Task DeleteEmprestimo(int idEmprestimo)
     {
-        _context.Remove(emprestimo);
-        _context.SaveChanges();
+        _context.Remove(idEmprestimo);
+        await _context.SaveChangesAsync();
     }
 
-    public void DevolverEmprestimo(Emprestimo emprestimo)
+    public async Task DevolverEmprestimo(Emprestimo emprestimo)
     {
-        var emprestimoBusca = _context.emprestimos.Find(emprestimo.Id);
-        var livro = _context.livros.Find(emprestimo.livro.Id);
+        var emprestimoBusca = await _context.emprestimos.FindAsync(emprestimo.Id);
+        var livro = await _context.livros.FindAsync(emprestimo.livro.Id);
 
         if (emprestimoBusca != null && livro != null)
         {

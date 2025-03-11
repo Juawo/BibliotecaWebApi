@@ -1,8 +1,11 @@
+using System.Collections;
 using BibliotecaAPI.Data;
+using BibliotecaAPI.Interfaces.Repositories;
 using BibliotecaAPI.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace BibliotecaAPI.Repositories;
-public class UsuarioRepository
+public class UsuarioRepository : IUsuarioRepository
 {
     private readonly ApplicationDBContext _context;
 
@@ -11,15 +14,15 @@ public class UsuarioRepository
         this._context = context;
     }
 
-    public List<Usuario> ListarTodosLivros()
+    public async Task<IEnumerable<Usuario>> GetAllUsuarios()
     {
-        var usuario = _context.usuarios.ToList();
+        var usuario = await _context.usuarios.ToListAsync();
         return usuario;
     }
 
-    public Usuario? PesquisarLivroPorId(int id)
+    public async Task<Usuario?> GetUsuarioById(int id)
     {
-        var usuario = _context.usuarios.Find(id);
+        var usuario = await _context.usuarios.FindAsync(id);
 
         if (usuario == null)
         {
@@ -29,24 +32,28 @@ public class UsuarioRepository
         return usuario;
     }
 
-    public void CadastrarUsuario(Usuario usuario)
+    public async Task CreateUsuario(Usuario usuario)
     {
-        _context.Add(usuario);
-        _context.SaveChanges();
+        await _context.AddAsync(usuario);
+        await _context.SaveChangesAsync();
 
     }
 
-    public void AtualizarUsuario(Usuario usuario)
+    public async Task UpdateUsuario(Usuario usuario)
     {
         _context.Update(usuario);
-        _context.SaveChanges();
+        await _context.SaveChangesAsync();
 
     }
 
-    public void RemoverUsuario(Usuario usuario)
+    public async Task DeleteUsuario(int idUsuario)
     {
-        _context.Remove(usuario);
-        _context.SaveChanges();
+        var usuario = await _context.livros.FindAsync(idUsuario);
 
+        if (usuario != null)
+        {
+            _context.Remove(usuario);
+            await _context.SaveChangesAsync();
+        }
     }
 }
