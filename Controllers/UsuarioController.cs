@@ -17,16 +17,16 @@ public class UsuarioController : ControllerBase
     }
 
     [HttpGet]
-    public IActionResult ListarTodosUsuarios()
+    public async Task<IActionResult> ListarTodosUsuarios()
     {
-        var usuarios = _usuarioRepository.ListarTodosLivros().Select(usuario => usuario.ToUsuarioDto());
+        var usuarios = (await _usuarioRepository.GetAllUsuarios()).Select(usuario => usuario.ToUsuarioDto());
         return Ok(usuarios);
     }
 
     [HttpGet("{id}")]
-    public IActionResult BuscarUsuarioId([FromRoute] int id)
+    public async Task<IActionResult> BuscarUsuarioId([FromRoute] int id)
     {
-        var usuario = _usuarioRepository.PesquisarLivroPorId(id);
+        var usuario = await _usuarioRepository.GetUsuarioById(id);
 
         if (usuario == null)
         {

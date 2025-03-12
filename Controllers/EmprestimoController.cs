@@ -18,16 +18,16 @@ public class EmprestimoController : ControllerBase
     }
 
     [HttpGet]
-    public IActionResult ListarTodosEmprestimos()
+    public async Task<IActionResult> ListarTodosEmprestimos()
     {
-        var emprestimos = _emprestimoRepository.ListarTodosEmprestimos().Select(emprestimo => emprestimo.ToEmprestimoDto());
+        var emprestimos = (await _emprestimoRepository.GetAllEmprestimos()).Select(emprestimo => emprestimo.ToEmprestimoDto());
         return Ok(emprestimos);
     }
 
     [HttpGet("{id}")]
-    public IActionResult BuscarEmprestimoId([FromRoute] int id)
+    public async Task<IActionResult> BuscarEmprestimoId([FromRoute] int id)
     {
-        var emprestimo = _emprestimoRepository.BuscarEmprestimoPorId(id);
+        var emprestimo = await _emprestimoRepository.GetEmprestimoById(id);
         if (emprestimo == null)
         {
             return NotFound();

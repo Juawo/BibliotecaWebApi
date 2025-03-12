@@ -48,6 +48,5 @@ public class LivroController : ControllerBase // LivroController herda de Contro
         await _livroRepository.CreateLivro(livroModel);
 
         return CreatedAtAction(nameof(BuscarLivroId), new {id = livroModel.Id}, livroModel.ToLivroDto());
-
     }
 }
