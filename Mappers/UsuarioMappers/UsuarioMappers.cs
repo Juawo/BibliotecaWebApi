@@ -24,4 +24,13 @@ public static class UsuarioMappers
             email = usuarioDto.email
         };
     }
+    public static Usuario ToUsuarioFromCreateDto(this CreateUsuarioRequestDto usuarioDto)
+    {
+        return new Usuario
+        {
+            nome = usuarioDto.nome,
+            cpf = usuarioDto.cpf,
+            email = usuarioDto.email
+        };
+    }
 }

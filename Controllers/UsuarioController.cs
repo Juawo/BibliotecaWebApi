@@ -1,4 +1,5 @@
 using BibliotecaAPI.Data;
+using BibliotecaAPI.Dtos.Usuario;
 using BibliotecaAPI.Mappers.UsuarioMappers;
 using BibliotecaAPI.Repositories;
 using Microsoft.AspNetCore.Mvc;
@@ -34,5 +35,14 @@ public class UsuarioController : ControllerBase
         }
 
         return Ok(usuario.ToUsuarioDto());
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> CadastrarUsuario([FromBody] CreateUsuarioRequestDto usuarioDto)
+    {
+        var usuario = usuarioDto.ToUsuarioFromCreateDto();
+        await _usuarioRepository.CreateUsuario(usuario);
+        
+        return CreatedAtAction(nameof(BuscarUsuarioId), new { id = usuario.Id }, usuario.ToUsuarioDto());
     }
 }

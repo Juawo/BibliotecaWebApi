@@ -17,12 +17,11 @@ public static class EmprestimoMappers
         };
     }
 
-    // public static Emprestimo ToEmprestimoModel(this EmprestimoDto emprestimoDto)
+    // public static Emprestimo ToEmprestimoModel(this CreateEmprestimoRequestDto emprestimoDto)
     // {
     //     return new Emprestimo
     //     {
-    //         Id = emprestimoDto.Id,
-    //         usuario = 
+        
 
     //     }
     // }

@@ -10,6 +10,9 @@ builder.Services.AddDbContext<ApplicationDBContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
 builder.Services.AddScoped<LivroRepository>();
+builder.Services.AddScoped<UsuarioRepository>();
+builder.Services.AddScoped<EmprestimoRepository>();
+
 var app = builder.Build();
 app.MapControllers();
 
