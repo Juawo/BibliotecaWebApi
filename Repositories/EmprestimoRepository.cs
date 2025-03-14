@@ -21,7 +21,7 @@ public class EmprestimoRepository : IEmprestimoRepository
 
     public async Task<Emprestimo?> GetEmprestimoById(int idEmprestimo)
     {
-        var emprestimo = await _context.emprestimos.FindAsync(idEmprestimo);
+        var emprestimo = await _context.emprestimos.Include(e => e.livro).FirstOrDefaultAsync(e => e.Id == idEmprestimo);
 
         if (emprestimo == null)
         {

@@ -2,7 +2,6 @@ namespace BibliotecaAPI.Models;
 
 public class Livro
 {
-
     public int Id { get; set; }
     public string titulo {get; set;}
     public string autor {get; set;}
