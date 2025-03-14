@@ -47,6 +47,26 @@ public class LivroController : ControllerBase // LivroController herda de Contro
         var livroModel = livroDto.ToLivroFromCreateDto();
         await _livroRepository.CreateLivro(livroModel);
 
-        return CreatedAtAction(nameof(BuscarLivroId), new {id = livroModel.Id}, livroModel.ToLivroDto());
+        return CreatedAtAction(nameof(BuscarLivroId), new { id = livroModel.Id }, livroModel.ToLivroDto());
+    }
+
+    [HttpPut]
+    [Route("{id}")]
+    public async Task<IActionResult> AtualizarLivro([FromRoute] int id, [FromBody] UpdateLivroRequestDto livroDto)
+    {
+        var livro = await _livroRepository.GetLivroById(id);
+        if (livro == null)
+        {
+            return NotFound("Livro não encontrado!");
+        }
+
+        livro.titulo = livroDto.titulo;
+        livro.autor = livroDto.autor;
+        livro.editora = livroDto.editora;
+        livro.anoPublicacao = livroDto.anoPublicacao;
+        livro.isEmprestado = livroDto.isEmprestado;
+
+        await _livroRepository.UpdateLivro(livro);
+        return Ok(livro.ToLivroDto());
     }
 }

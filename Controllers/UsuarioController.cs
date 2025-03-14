@@ -42,7 +42,26 @@ public class UsuarioController : ControllerBase
     {
         var usuario = usuarioDto.ToUsuarioFromCreateDto();
         await _usuarioRepository.CreateUsuario(usuario);
-        
+
         return CreatedAtAction(nameof(BuscarUsuarioId), new { id = usuario.Id }, usuario.ToUsuarioDto());
+    }
+
+    [HttpPut]
+    [Route("{id}")]
+    public async Task<IActionResult> AtualizarUsuario([FromRoute] int id, [FromBody] UpdateUsuarioRequestDto usuarioDto)
+    {
+        var usuario = await _usuarioRepository.GetUsuarioById(id);
+
+        if (usuario == null)
+        {
+            return NotFound("Usuário não encontrado!");
+        }
+
+        usuario.nome = usuarioDto.nome;
+        usuario.cpf = usuarioDto.cpf;
+        usuario.email = usuarioDto.email;
+
+        await _usuarioRepository.UpdateUsuario(usuario);
+        return Ok(usuario.ToUsuarioDto());
     }
 }
