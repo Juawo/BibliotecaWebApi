@@ -15,13 +15,13 @@ public class EmprestimoRepository : IEmprestimoRepository
 
     public async Task<IEnumerable<Emprestimo>> GetAllEmprestimos()
     {
-        var emprestimos = await _context.emprestimos.ToListAsync();
+        var emprestimos = await _context.emprestimos.AsNoTracking().Include(e => e.livro).Include(e => e.usuario).ToListAsync();
         return emprestimos;
     }
 
     public async Task<Emprestimo?> GetEmprestimoById(int idEmprestimo)
     {
-        var emprestimo = await _context.emprestimos.Include(e => e.livro).Include(e => e.usuario).FirstOrDefaultAsync(e => e.Id == idEmprestimo);
+        var emprestimo = await _context.emprestimos.AsNoTracking().Include(e => e.livro).Include(e => e.usuario).FirstOrDefaultAsync(e => e.Id == idEmprestimo);
 
         if (emprestimo == null)
         {
@@ -33,7 +33,7 @@ public class EmprestimoRepository : IEmprestimoRepository
 
     public async Task<Emprestimo?> GetEmprestimoByUsuarioAndLivro(int idLivro, int idUsuario)
     {
-        var emprestimo = await _context.emprestimos.FirstOrDefaultAsync(e => e.livro.Id == idLivro && e.usuario.Id == idUsuario && e.isDevolvido == false);
+        var emprestimo = await _context.emprestimos.AsNoTracking().Include(e => e.livro).Include(e => e.usuario).FirstOrDefaultAsync(e => e.livro.Id == idLivro && e.usuario.Id == idUsuario && e.isDevolvido == false);
 
         if (emprestimo == null)
         {
@@ -45,7 +45,7 @@ public class EmprestimoRepository : IEmprestimoRepository
 
     public async Task<IEnumerable<Emprestimo>> GetHistoricoEmprestimoUsuario(Usuario usuario)
     {
-        var emprestimos = await _context.emprestimos.Where(e => e.usuario.Id == usuario.Id).ToListAsync();
+        var emprestimos = await _context.emprestimos.AsNoTracking().Include(e => e.livro).Include(e => e.usuario).Where(e => e.usuario.Id == usuario.Id).ToListAsync();
         return emprestimos;
     }
 
@@ -61,9 +61,9 @@ public class EmprestimoRepository : IEmprestimoRepository
         await _context.SaveChangesAsync();
     }
 
-    public async Task DeleteEmprestimo(int idEmprestimo)
+    public async Task DeleteEmprestimo(Emprestimo emprestimo)
     {
-        _context.Remove(idEmprestimo);
+        _context.Remove(emprestimo);
         await _context.SaveChangesAsync();
     }
 
@@ -79,7 +79,7 @@ public class EmprestimoRepository : IEmprestimoRepository
 
             livro.isEmprestado = false;
             _context.Update(livro);
-            
+
             _context.SaveChanges();
         }
     }

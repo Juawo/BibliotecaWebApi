@@ -69,4 +69,18 @@ public class LivroController : ControllerBase // LivroController herda de Contro
         await _livroRepository.UpdateLivro(livro);
         return Ok(livro.ToLivroDto());
     }
+
+    [HttpDelete]
+    [Route("{id}")]
+    public async Task<IActionResult> DeletarLivro([FromRoute] int id)
+    {
+        var livro = await _livroRepository.GetLivroById(id);
+        if (livro == null)
+        {
+            return NotFound("Livro não encontrado para deletar!");
+        }
+
+        await _livroRepository.DeleteLivro(livro.Id);
+        return NoContent();
+    }
 }

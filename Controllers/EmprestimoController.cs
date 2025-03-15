@@ -29,6 +29,20 @@ public class EmprestimoController : ControllerBase
         return Ok(emprestimos);
     }
 
+    [HttpGet("listarHistorico/{idUsuario}")]
+    public async Task<IActionResult> ListarHistoricoEmprestimosUsuario([FromRoute] int idUsuario)
+    {
+        var usuario = await _usuarioRepository.GetUsuarioById(idUsuario);
+        if (usuario == null)
+        {
+            return NotFound("Usuario não encontrado!");
+        }
+
+        var emprestimos = (await _emprestimoRepository.GetHistoricoEmprestimoUsuario(usuario)).Select(emprestimo => emprestimo.ToEmprestimoDto());
+
+        return Ok(emprestimos);
+    }
+
     [HttpGet("{id}")]
     public async Task<IActionResult> BuscarEmprestimoId([FromRoute] int id)
     {
@@ -52,6 +66,7 @@ public class EmprestimoController : ControllerBase
 
         return Ok(emprestimo.ToEmprestimoDto());
     }
+
 
     [HttpPost]
     public async Task<IActionResult> RegistrarEmprestimo([FromBody] CreateEmprestimoRequestDto emprestimoDto)
@@ -78,6 +93,8 @@ public class EmprestimoController : ControllerBase
         }
 
         Emprestimo emprestimo = new(usuario, livro);
+        livro.isEmprestado = true;
+        await _livroRepository.UpdateLivro(livro);
         await _emprestimoRepository.CreateEmprestimo(emprestimo);
 
         return CreatedAtAction(nameof(BuscarEmprestimoId), new { id = emprestimo.Id }, emprestimo.ToEmprestimoDto());
@@ -113,7 +130,23 @@ public class EmprestimoController : ControllerBase
         emprestimo.usuario = usuario;
         emprestimo.isDevolvido = emprestimoDto.isDevolvido;
 
+        await _emprestimoRepository.UpdateEmprestimo(emprestimo);
+
         return Ok(emprestimo.ToEmprestimoDto());
+    }
+
+    [HttpDelete]
+    [Route("{id}")]
+    public async Task<IActionResult> DeletarEmprestimo([FromRoute] int id)
+    {
+        var emprestimo = await _emprestimoRepository.GetEmprestimoById(id);
+        if (emprestimo == null)
+        {
+            return NotFound("Empréstimo não encontrado para deletar!");
+        }
+
+        await _emprestimoRepository.DeleteEmprestimo(emprestimo);
+        return NoContent();
     }
 
     [HttpPut("{id}/devolverEmprestimo")]
@@ -135,6 +168,7 @@ public class EmprestimoController : ControllerBase
         emprestimo.dataDevolucao = DateTime.UtcNow;
         emprestimo.livro.isEmprestado = false;
 
+        await _livroRepository.UpdateLivro(emprestimo.livro);
         await _emprestimoRepository.UpdateEmprestimo(emprestimo);
         return Ok("Emprestimo devolvido com sucesso!");
     }

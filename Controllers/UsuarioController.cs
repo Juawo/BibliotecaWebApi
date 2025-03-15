@@ -64,4 +64,18 @@ public class UsuarioController : ControllerBase
         await _usuarioRepository.UpdateUsuario(usuario);
         return Ok(usuario.ToUsuarioDto());
     }
+
+    [HttpDelete]
+    [Route("{id}")]
+    public async Task<IActionResult> DeletarUsuario([FromRoute] int id)
+    {
+        var usuario = await _usuarioRepository.GetUsuarioById(id);
+        if (usuario == null)
+        {
+            return NotFound("Usuário não encontrado para deletar!");
+        }
+
+        await _usuarioRepository.DeleteUsuario(usuario.Id);
+        return NoContent();
+    }
 }

@@ -46,14 +46,10 @@ public class UsuarioRepository : IUsuarioRepository
 
     }
 
-    public async Task DeleteUsuario(int idUsuario)
+    public async Task DeleteUsuario(Usuario usuario)
     {
-        var usuario = await _context.livros.FindAsync(idUsuario);
+        _context.Remove(usuario);
+        await _context.SaveChangesAsync();
 
-        if (usuario != null)
-        {
-            _context.Remove(usuario);
-            await _context.SaveChangesAsync();
-        }
     }
 }

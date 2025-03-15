@@ -11,7 +11,7 @@ public interface IEmprestimoRepository
     Task<IEnumerable<Emprestimo>> GetHistoricoEmprestimoUsuario(Usuario usuario);
     Task CreateEmprestimo(Emprestimo emprestimo);
     Task UpdateEmprestimo(Emprestimo emprestimo);
-    Task DeleteEmprestimo(int idEmprestimo);
+    Task DeleteEmprestimo(Emprestimo emprestimo);
     Task DevolverEmprestimo(Emprestimo emprestimo);
 
 }

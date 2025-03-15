@@ -45,13 +45,9 @@ public class LivroRepository : ILivroRepository
 
     }
 
-    public async Task DeleteLivro(int idLivro)
+    public async Task DeleteLivro(Livro livro)
     {
-        var livro = await _context.livros.FindAsync(idLivro);
-        if (livro != null)
-        {
-            _context.Remove(livro);
-            await _context.SaveChangesAsync();
-        }
+        _context.Remove(livro);
+        await _context.SaveChangesAsync();
     }
 }
