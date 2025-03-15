@@ -5,5 +5,5 @@ public class UpdateLivroRequestDto
     public string autor { get; set; }
     public string editora { get; set; }
     public int anoPublicacao { get; set; }
-    public bool isEmprestado { get; set}
+    public bool isEmprestado { get; set; }
 }

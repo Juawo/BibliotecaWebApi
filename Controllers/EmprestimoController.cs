@@ -33,9 +33,21 @@ public class EmprestimoController : ControllerBase
     public async Task<IActionResult> BuscarEmprestimoId([FromRoute] int id)
     {
         var emprestimo = await _emprestimoRepository.GetEmprestimoById(id);
+
         if (emprestimo == null)
         {
-            return NotFound();
+            return NotFound("Emprestimo não encontrado!");
+        }
+
+        if (emprestimo.livro == null)
+        {
+            return NotFound("Livro associado ao emprestimo não encontrado!");
+            
+        }
+        if (emprestimo.usuario == null)
+        {
+            return NotFound("Usuario associado ao emprestimo não encontrado!");
+            
         }
 
         return Ok(emprestimo.ToEmprestimoDto());
@@ -119,6 +131,7 @@ public class EmprestimoController : ControllerBase
             return BadRequest("Esse emprestimo já foi devolvido!");
         }
 
+        emprestimo.isDevolvido = true;
         emprestimo.dataDevolucao = DateTime.UtcNow;
         emprestimo.livro.isEmprestado = false;
 
